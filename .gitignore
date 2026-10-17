@@ -1,0 +1,10 @@
+# Editor settings and extension files 
+.vscode/
+*.visx
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Packages (not used here)
+nodes_modules/
