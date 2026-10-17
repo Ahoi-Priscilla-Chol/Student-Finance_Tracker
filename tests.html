@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head><meta charset="uft-8"><tittle>Tests</tittle>
+<body>
+    <h1>Tests</h1>
+    <ul id="resut"></ul>
+    <script type="module">
+        import { checkDescription, checkAmount, checkDate, checkCategory, hasRepeatedWord } from './scripts/validators.js';
+        import { makeRegex, highlight} from './scripts/search.js';
+        import { checkRecords } from './scripts/storage.js';
+
+        function test(name, ok) {
+            const li = document.createElement('li');
+            li.textContent = (ok ? 'PASS: ' : 'FAIL: ') + name;
+            document.getElementById('results').append(li);
+        }
+
+        test('description with a leading space fails', !checkDescription(' wifi bill'));
+        test('amount 30.50 is OK', checkAmount('30.50'));
+        test('amount 012 fails', !checkAmount('012'));
+        test('month 13 fails', !checkDate('2026-13-01'));
+        test('category "Rent2" fails', !checkCategory('Rent2'));
+        test('repeated word is found', hasRepeatedWord('bus fare fare to town'));
+        test('broken regex gives null', makeRegex('([', true) === null);
+        test('highlight is safe from HTML', highlight('<b>rent</b', makeRegex('rent', true)) === '&lt;b&gt;<mark>rent</mark>&gt;');
+
+        let seedOK = true;
+        try {
+            checkRecords(await fetch('seed.json')).json();
+        } catch (error) {
+            seedOK = false;
+        } 
+        test('seed.json is OK', seedOK);   
+    </script>
+</body>
+</html>
